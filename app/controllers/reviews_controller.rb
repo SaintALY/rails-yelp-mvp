@@ -12,6 +12,7 @@ class ReviewsController < ApplicationController
 
   # GET /reviews/new
   def new
+    @restaurant = Restaurant.find(params[:restaurant_id])
     @review = Review.new
   end
 
@@ -22,9 +23,14 @@ class ReviewsController < ApplicationController
   # POST /reviews
   def create
     @review = Review.new(review_params)
+    # we need `restaurant_id` to associate review with corresponding restaurant
+    @restaurant = Restaurant.find(params[:restaurant_id])
+    @review.restaurant = @restaurant
+    @review.save
+    redirect_to restaurant_path(@restaurant)
 
     if @review.save
-      redirect_to @review, notice: 'Review was successfully created.'
+      redirect_to restaurant_path(@restaurant), notice: 'Review was successfully created.'
     else
       render :new
     end
@@ -53,6 +59,7 @@ class ReviewsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def review_params
-      params.require(:review).permit(:rating, :content, :restaurant_id)
+      params.require(:review).permit(:content)
+      # params.require(:review).permit(:rating, :content, :restaurant_id)
     end
 end
