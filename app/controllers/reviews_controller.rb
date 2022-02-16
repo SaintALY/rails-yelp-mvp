@@ -24,10 +24,11 @@ class ReviewsController < ApplicationController
   def create
     @review = Review.new(review_params)
     # we need `restaurant_id` to associate review with corresponding restaurant
+
     @restaurant = Restaurant.find(params[:restaurant_id])
     @review.restaurant = @restaurant
-    @review.save
-    redirect_to restaurant_path(@restaurant)
+    # @review.save
+    # redirect_to restaurant_path(@restaurant)
 
     if @review.save
       redirect_to restaurant_path(@restaurant), notice: 'Review was successfully created.'
@@ -47,8 +48,10 @@ class ReviewsController < ApplicationController
 
   # DELETE /reviews/1
   def destroy
+    @review = Review.find(params[:id])
     @review.destroy
-    redirect_to reviews_url, notice: 'Review was successfully destroyed.'
+    redirect_to restaurant_path(@review.restaurant)
+    # redirect_to reviews_url, notice: 'Review was successfully destroyed.'
   end
 
   private
