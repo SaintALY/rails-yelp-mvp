@@ -45,6 +45,11 @@ class RestaurantsController < ApplicationController
     redirect_to restaurants_url, notice: 'Restaurant was successfully destroyed.'
   end
 
+  # a route to list five stars restaurants
+  def top
+    @restaurants = Restaurant.where(stars: 5)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_restaurant
